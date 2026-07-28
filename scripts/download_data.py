@@ -43,14 +43,32 @@ def get_mssbench(out: Path) -> bool:
 
 
 def get_mossbench(out: Path) -> bool:
-    """MOSSBench -- oversensitivity, 300 benign pairs."""
+    """MOSSBench -- oversensitivity, 300 benign pairs.
+
+    Fetched from GitHub rather than the hub: the HF dataset (AIcell/MOSSBench)
+    ships the images but not images_information/information.json, which is the
+    metadata SafeCoDe indexes on. The GitHub repo carries both under data/.
+    """
     print("MOSSBench (oversensitivity, 300 pairs)")
     print("  NOTE: CC BY-SA 4.0; the authors prohibit use as a training set.")
-    ok = _hf_snapshot("AIcell/MOSSBench", out / "mossbench")
-    if ok:
-        print("  expected layout: images_information/information.json + images/")
-        print("  use with: --moss_data_root", out / "mossbench")
-    return ok
+    dest = out / "mossbench"
+    if shutil.which("git") is None:
+        print("  ! git not found; clone manually from "
+              "https://github.com/xirui-li/MOSSBench")
+        return False
+    if not dest.exists():
+        subprocess.run(
+            ["git", "clone", "--depth", "1",
+             "https://github.com/xirui-li/MOSSBench", str(dest)],
+            check=True,
+        )
+    info = dest / "data" / "images_information" / "information.json"
+    if not info.is_file():
+        print(f"  ! expected metadata missing at {info}")
+        return False
+    print(f"  metadata + images ready under {dest / 'data'}")
+    print("  use with: --moss_data_root", dest / "data")
+    return True
 
 
 def get_mm_safetybench(out: Path) -> bool:

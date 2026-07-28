@@ -67,11 +67,20 @@ generated normally, which is what keeps helpfulness intact.
 ```bash
 git clone https://github.com/franciscoliu/SafeCoDe
 cd SafeCoDe
-pip install -e .
+pip install -e ".[qwen]"          # drop [qwen] if you only run LLaVA/InstructBLIP/IDEFICS
 ```
 
-For Qwen models also `pip install -e ".[qwen]"`. To reproduce the paper's
-environment exactly, `pip install -r requirements-lock.txt`.
+To reproduce the paper's environment exactly, `pip install -r requirements-lock.txt`.
+
+> **Match your torch build to your CUDA driver.** Plain `pip install torch`
+> may fetch a wheel newer than your driver supports, in which case torch
+> silently falls back to CPU and a 7B run crawls with no error message. Check
+> `nvidia-smi` for your CUDA version and install the matching build, e.g. for
+> CUDA 12.8:
+> ```bash
+> pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+> ```
+> Confirm with `python demo.py --dry-run`, which prints `cuda available`.
 
 ## Environment variables
 
@@ -99,8 +108,14 @@ or path is ever hardcoded. Shell exports override the file.
 | `SAFECODE_MOSS_JUDGE_MODEL` | no | `gpt-4-turbo` | MOSSBench scoring |
 
 **You can run the whole method without any API key** — pass `--judge qwen` and
-the caption and verdict come from a local Qwen-VL model instead. Results will
-not match the published tables exactly; see [docs/REPRODUCE.md](docs/REPRODUCE.md).
+the caption and verdict come from a local Qwen-VL model instead.
+
+Be aware that judge quality bounds method quality, and a small local judge is
+markedly weaker. Measured on all 300 MOSSBench samples — a set that is benign
+by construction, so a perfect judge would answer `safe` every time — a
+`Qwen2.5-VL-3B-Instruct` judge returned `unsafe` on 199 of 300. Use the 8B
+default or GPU headroom for a larger judge if you can, and use `--judge gpt4o`
+to match the paper. See [docs/REPRODUCE.md](docs/REPRODUCE.md).
 
 ## Quickstart
 
@@ -165,6 +180,24 @@ Three things that materially affect results and are easy to miss:
   the paper, `--judge qwen` trades accuracy for zero cost.
 - **Generation is stochastic** (`do_sample=True`, temperature 0.7–0.8), so
   numbers move slightly between runs.
+
+## What has been tested
+
+For transparency about what is verified versus merely written:
+
+| | Status |
+|---|---|
+| LLaVA-1.6-7B + local Qwen judge, single image | run on one A100 |
+| MOSSBench, all 300 samples, `--method safecode` | run on one A100, completed |
+| OpenAI judge/scoring layer | verified against a mocked transport |
+| Import, lint, CLI, leak and secret scans | automated, all passing |
+| Qwen / InstructBLIP / IDEFICS targets | **not yet run on hardware** |
+| MSSBench, MM-SafetyBench, FigStep, HADES, MSTS drivers | **not yet run on hardware** |
+| `--judge gpt4o` against the live API | **not yet run** |
+
+Measured on one A100-80GB (LLaVA-1.6-7B target, Qwen2.5-VL-3B judge), per
+MOSSBench sample: caption+verdict 0.87 s mean, decode 3.31 s mean (median
+1.26 s, p95 8.18 s).
 
 ## Repository layout
 

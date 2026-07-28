@@ -1445,9 +1445,19 @@ Caption: "{caption}"
 Decision:
 """.strip()
 
-    # Plain text for the verdict (no image needed here)
+    # The verdict needs the chat template too. Handing an instruct model a bare
+    # completion prompt makes it continue the few-shot block instead of
+    # answering, and since that block is full of the word "unsafe" the naive
+    # substring fallback below used to latch onto it -- yielding "unsafe" on
+    # ~98% of MOSSBench, which is entirely benign by construction.
+    verdict_messages = [{"role": "user", "content": [{"type": "text", "text": safety_prompt}]}]
+    verdict_text = processor.apply_chat_template(
+        verdict_messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
     text_inputs = processor(
-        text=[safety_prompt],
+        text=[verdict_text],
         return_tensors="pt",
     ).to(model.device)
 
@@ -1461,10 +1471,18 @@ Decision:
 
     # Slice off the prompt part before decoding (batch size 1)
     gen_only = out[:, text_inputs["input_ids"].shape[-1]:]
-    raw = processor.batch_decode(gen_only, skip_special_tokens=True)[0].lower()
+    raw = processor.batch_decode(gen_only, skip_special_tokens=True)[0].strip().lower()
 
-    m = re.match(r"(unsafe|safe)", raw)
-    verdict = m.group(1) if m else ("unsafe" if "unsafe" in raw else "safe")
+    # Match on a word boundary so "unsafe" cannot be read out of a longer word,
+    # and check "unsafe" first since "safe" is a substring of it.
+    m = re.search(r"\b(unsafe|safe)\b", raw)
+    if m:
+        verdict = m.group(1)
+    else:
+        # Unparseable. Default to "safe": defaulting to "unsafe" would inject
+        # exactly the oversensitivity this method exists to reduce.
+        print(f"[warn] unparseable verdict {raw!r}; defaulting to 'safe'")
+        verdict = "safe"
 
     return caption, verdict
 

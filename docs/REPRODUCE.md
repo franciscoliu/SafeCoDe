@@ -41,7 +41,7 @@ python scripts/download_data.py --benchmark mossbench --out data/
 python -m safecode.main \
     --model_type llava --model_path llava-hf/llava-v1.6-vicuna-7b-hf \
     --method safecode --judge gpt4o --output_name safecode_llava \
-    --moss_data_root data/mossbench --moss_output_dir results/mossbench
+    --moss_data_root data/mossbench/data --moss_output_dir results/mossbench
 ```
 
 For the baseline row, swap `--method safecode` for `--method base`.
@@ -88,6 +88,11 @@ MOSSBench is ~300 samples; MSSBench ~1820 pairs, i.e. two judged images each.
 `--judge qwen` removes the API cost entirely at some accuracy cost, and adds an
 8B model to GPU memory alongside the target model.
 
+Measured on one A100-80GB with a LLaVA-1.6-7B target and a Qwen2.5-VL-3B
+judge, MOSSBench averaged 0.87 s per sample for caption+verdict and 3.31 s for
+decoding (median 1.26 s, p95 8.18 s); all 300 samples finished in about 25
+minutes including model load.
+
 Each run writes `*_api_usage.json` (token counts and wall-clock per judge call)
 and `*_efficiency.json` (caption and decode latency, mean/median/p95) next to
 the results, which is where the efficiency table comes from.
@@ -107,7 +112,10 @@ uniform lengths.
 
 **Judge choice changes results.** The paper's numbers use the GPT-4o judge.
 `--judge qwen` is provided for cost-free replication and will not match the
-published tables exactly.
+published tables. How far off depends strongly on the judge's size: on all 300
+MOSSBench samples (benign by construction, so `safe` is always the right
+answer) a `Qwen2.5-VL-3B-Instruct` judge returned `unsafe` 199 times. The 8B
+default does better; GPT-4o is what the paper used.
 
 **Sampling.** Generation uses `do_sample=True` (temperature 0.7–0.8), so runs
 vary slightly. Set `torch.manual_seed` for a fixed contrastive perturbation;
