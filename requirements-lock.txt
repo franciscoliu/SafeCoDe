@@ -1,0 +1,27 @@
+# Exact versions used for the experiments reported in the paper
+# (Python 3.10.14, CUDA 12.x, Linux x86-64).
+#
+# Use this if you are trying to reproduce the published numbers exactly.
+# For ordinary use prefer requirements.txt.
+#
+#   pip install -r requirements-lock.txt
+
+torch==2.6.0
+transformers==4.57.0
+accelerate==1.4.0
+datasets==3.3.2
+numpy==2.2.3
+pandas==2.2.3
+pillow==11.1.0
+requests==2.32.3
+tqdm==4.67.1
+sentencepiece==0.2.0
+protobuf==5.29.3
+qwen-vl-utils==0.0.11
+
+# Transitive pins from the original environment, listed for completeness.
+huggingface-hub==0.36.0
+tokenizers==0.22.1
+safetensors==0.5.3
+pyarrow==19.0.1
+einops==0.8.1

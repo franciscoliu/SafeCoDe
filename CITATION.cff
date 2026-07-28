@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "SafeCoDe: Steering Multimodal Large Language Models Decoding for Context-Aware Safety"
+authors:
+  - family-names: Liu
+    given-names: Zheyuan
+  - family-names: Xu
+    given-names: Zhangchen
+  - family-names: Dou
+    given-names: Guangyao
+  - family-names: Yuan
+    given-names: Xiangchi
+  - family-names: Tan
+    given-names: Zhaoxuan
+  - family-names: Poovendran
+    given-names: Radha
+  - family-names: Jiang
+    given-names: Meng
+repository-code: "https://github.com/franciscoliu/SafeCoDe"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Steering Multimodal Large Language Models Decoding for Context-Aware Safety"
+  authors:
+    - family-names: Liu
+      given-names: Zheyuan
+    - family-names: Xu
+      given-names: Zhangchen
+    - family-names: Dou
+      given-names: Guangyao
+    - family-names: Yuan
+      given-names: Xiangchi
+    - family-names: Tan
+      given-names: Zhaoxuan
+    - family-names: Poovendran
+      given-names: Radha
+    - family-names: Jiang
+      given-names: Meng
+  year: 2025
+  journal: "arXiv preprint arXiv:2509.19212"
+  url: "https://arxiv.org/abs/2509.19212"
+  doi: "10.48550/arXiv.2509.19212"

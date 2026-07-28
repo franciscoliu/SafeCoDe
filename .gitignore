@@ -1,0 +1,46 @@
+# Secrets -- never commit
+.env
+*.key
+api_keys/
+
+# Benchmark data and model weights (downloaded via scripts/download_data.py)
+data/
+results/
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+_tmp_imgs/
+_ours_tmp_images/
+
+# Third-party checkouts
+VLMEvalKit/
+third_party/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Tooling / editors -- deliberately excluded, these leak local paths and
+# remote-deployment configuration
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+wandb/
