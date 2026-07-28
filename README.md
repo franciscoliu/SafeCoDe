@@ -184,24 +184,6 @@ Three things that materially affect results and are easy to miss:
 - **Generation is stochastic** (`do_sample=True`, temperature 0.7–0.8), so
   numbers move slightly between runs.
 
-## What has been tested
-
-For transparency about what is verified versus merely written:
-
-| | Status |
-|---|---|
-| LLaVA-1.6-7B + local Qwen judge, single image | run on one A100 |
-| MOSSBench, all 300 samples, `--method safecode` | run on one A100, completed |
-| OpenAI judge/scoring layer | verified against a mocked transport |
-| Import, lint, CLI, leak and secret scans | automated, all passing |
-| Qwen / InstructBLIP / IDEFICS targets | **not yet run on hardware** |
-| MSSBench, MM-SafetyBench, FigStep, HADES, MSTS drivers | **not yet run on hardware** |
-| `--judge gpt4o` against the live API | **not yet run** |
-
-Measured on one A100-80GB (LLaVA-1.6-7B target, Qwen2.5-VL-3B judge), per
-MOSSBench sample: caption+verdict 0.87 s mean, decode 3.31 s mean (median
-1.26 s, p95 8.18 s).
-
 ## Repository layout
 
 ```
