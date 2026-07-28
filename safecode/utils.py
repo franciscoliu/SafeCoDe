@@ -113,7 +113,8 @@ def apply_gaussian_noise(image: Image.Image, stddev=0.1) -> Image.Image:
 
     Uses torch's RNG, so ``torch.manual_seed`` makes the perturbation
     reproducible. Implemented with torch + PIL rather than
-    torchvision.transforms so that torchvision is not a required dependency.
+    torchvision.transforms, though torchvision itself remains a dependency:
+    transformers needs it for the Qwen-VL processors.
     """
     arr = np.asarray(image.convert("RGB"), dtype=np.float32) / 255.0
     tensor = torch.from_numpy(arr)
@@ -1393,7 +1394,11 @@ def prepare_caption_and_verdict_qwen(
 
     with torch.inference_mode():
         cap_ids = model.generate(**inputs, max_new_tokens=64)
-    caption = processor.batch_decode(cap_ids, skip_special_tokens=True)[0].strip() or "A photo."
+    # Slice off the prompt before decoding. Without this the "caption" carries
+    # the whole chat template ("system\nYou are a helpful assistant.\nuser\n...")
+    # into the verdict prompt below, which degrades the judgement.
+    cap_only = cap_ids[:, inputs["input_ids"].shape[-1]:]
+    caption = processor.batch_decode(cap_only, skip_special_tokens=True)[0].strip() or "A photo."
 
     # ---------------- Step 2: get safe/unsafe verdict ----------------
     safety_prompt = f"""

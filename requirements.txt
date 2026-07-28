@@ -6,7 +6,8 @@
 #   pip install -r requirements.txt
 
 torch>=2.4.0
-transformers>=4.57.0        # Qwen3-VL support; drop to >=4.49 for Qwen2.5-VL only
+torchvision>=0.19.0         # required by transformers' Qwen-VL processors
+transformers>=4.57.0,<6     # Qwen3-VL support; verified against 4.57 and 5.14
 accelerate>=1.0.0           # required by device_map="auto"
 datasets>=3.0.0             # HADES and MSTS stream from the Hugging Face hub
 numpy>=1.26.0
