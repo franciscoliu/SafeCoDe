@@ -161,10 +161,13 @@ python -m safecode.main \
 | FigStep | typographic jailbreaks | download |
 | HADES | visual jailbreaks | streamed from the hub |
 | MSTS | multilingual safety | streamed from the hub |
-| MMMU / MathVista / MM-Vet / MIA-Bench | utility retention | via [patched VLMEvalKit](patches/README.md) |
 
 Full commands in [docs/REPRODUCE.md](docs/REPRODUCE.md). Runs are resumable —
 re-run with the same `--output_name` and finished samples are skipped.
+
+The paper's utility results (MMMU, MathVista, MM-Vet, MIA-Bench) were produced
+with [VLMEvalKit](https://github.com/open-compass/VLMEvalKit), a separate
+harness that is not part of this repository and is run on its own.
 
 ## Method notes
 
@@ -205,7 +208,6 @@ MOSSBench sample: caption+verdict 0.87 s mean, decode 3.31 s mean (median
 safecode/       the method: decoding, judge, model loading, benchmark drivers
 benchmarks/     minimal helpers adapted from MSSBench and MOSSBench
 scripts/        data download
-patches/        VLMEvalKit changes for utility evaluation
 docs/           reproduction guide and third-party attribution
 demo.py         single-image entry point
 ```

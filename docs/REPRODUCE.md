@@ -78,8 +78,10 @@ python -m safecode.main ... --msts_output_dir results/msts --msts_language engli
 
 ## Utility
 
-See `patches/README.md`. Utility benchmarks run through a patched VLMEvalKit,
-not through `safecode.main`.
+Utility benchmarks (MMMU, MathVista, MM-Vet, MIA-Bench) do not run through
+`safecode.main`. They were evaluated with
+[VLMEvalKit](https://github.com/open-compass/VLMEvalKit), which is a separate
+harness run independently of this repository.
 
 ## Cost and runtime
 

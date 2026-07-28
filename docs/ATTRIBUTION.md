@@ -1,6 +1,6 @@
 # Attribution and third-party licences
 
-SafeCoDe evaluates on six external projects. **None of their data is
+SafeCoDe evaluates on six external benchmarks. **None of their data is
 redistributed in this repository** — `scripts/download_data.py` fetches
 everything from the original distributors, so the licence you accept is
 theirs, not ours.
@@ -18,7 +18,6 @@ that are stricter than this repository's MIT licence.
 | HADES | MIT, © 2024 Yifan Li | [RUCAIBox/HADES](https://github.com/RUCAIBox/HADES) · [`Monosail/HADES`](https://huggingface.co/datasets/Monosail/HADES) | [arXiv:2403.09792](https://arxiv.org/abs/2403.09792), ECCV 2024 Oral |
 | FigStep | MIT, © 2023 Contributors of FigStep | [ThuCCSLab/FigStep](https://github.com/ThuCCSLab/FigStep) | [arXiv:2311.05608](https://arxiv.org/abs/2311.05608), AAAI 2025 Oral |
 | MSTS | see dataset card | [`felfri/MSTS`](https://huggingface.co/datasets/felfri/MSTS) | — |
-| VLMEvalKit | Apache 2.0, © 2023 VLMEvalKit Authors | [open-compass/VLMEvalKit](https://github.com/open-compass/VLMEvalKit) | [arXiv:2407.11691](https://www.arxiv.org/abs/2407.11691) |
 
 ## Restrictions worth reading twice
 
@@ -37,15 +36,6 @@ activities" and to ensure responsible and ethical use.
 
 **FigStep** warns prominently that the repository contains harmful model
 responses. It is a jailbreak benchmark; treat its contents accordingly.
-
-## VLMEvalKit
-
-Utility evaluation (MMMU, MathVista, MM-Vet, MIA-Bench) runs through a
-**modified** VLMEvalKit. Per Apache 2.0 §4 we state that plainly: the files
-listed in `patches/README.md` were changed relative to upstream commit
-`989e33b28a2f14191ffea711936c56ccb96255ff`. The upstream LICENSE and NOTICE
-are preserved in whatever checkout you patch; we ship a diff rather than a
-fork so the provenance stays unambiguous.
 
 ## Code adapted in this repository
 
